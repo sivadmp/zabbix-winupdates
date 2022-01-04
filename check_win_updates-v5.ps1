@@ -1,4 +1,4 @@
-﻿# Powershell script for Zabbix agents.
+# Powershell script for Zabbix agents.
 
 # Version 2.1 - for Zabbix agent 5x
 
@@ -19,15 +19,18 @@ $reportpath = "C:\IT\WinUpdates"
 # Change $ZabbixInstallPath to wherever your Zabbix Agent is installed
 
 $ZabbixInstallPath = "$Env:Programfiles\Zabbix Agent"
-$ZabbixConfFile = "$Env:Programdata\zabbix"
+#$ZabbixConfFile = "$Env:Programdata\zabbix"
+$ZabbixConfFile = "$Env:Programfiles\Zabbix Agent"
+#Cambiar por el nombre del servidor registrado en Zabbix
+$SrvHost = "srv-xxx"
 
 # Do not change the following variables unless you know what you are doing
 
 $htReplace = New-Object hashtable
-foreach ($letter in (Write-Output ä ae ö oe ü ue Ä Ae Ö Oe Ü Ue ß ss)) {
-    $foreach.MoveNext() | Out-Null
-    $htReplace.$letter = $foreach.Current
-}
+#foreach ($letter in (Write-Output ä ae ö oe ü ue Ä Ae Ö Oe Ü Ue ß ss)) {
+#    $foreach.MoveNext() | Out-Null
+#    $htReplace.$letter = $foreach.Current
+#}
 $pattern = "[$(-join $htReplace.Keys)]"
 $returnStateOK = 0
 $returnStateWarning = 1
@@ -99,12 +102,12 @@ if ($updates.Count -eq 0) {
 	Write-Output "- Winupdates.Hidden $($countHidden)" | Out-File -Encoding "ASCII" -FilePath $env:temp$SenderargcountHidden
     Write-Host "`t There are no pending updates" -ForeGroundColor "Green"
 	
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s "$env:computername"
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $SrvHost
 	
 	exit $returnStateOK
 }
@@ -139,12 +142,12 @@ if (($countCritical + $countOptional) -gt 0) {
     Write-Host "`t There are $($countOptional) optional updates available" -ForeGroundColor "Yellow"
     Write-Host "`t There are $($countHidden) hidden updates available" -ForeGroundColor "Yellow"
 	
-    & $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s "$env:computername"
+    & $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $SrvHost
 }   
 
 # ------------------------------------------------------------------------- #
@@ -213,7 +216,7 @@ if ($countCritical -gt 0 -Or $countOptional -gt 2) {
 						Add-Content $ReportFile "`t Download Status: SUCCESS"
 					}
 					Else {
-						Add-Content $ReportFile "`t Download Status: FAILED With Error -- $Error()"
+						Add-Content $ReportFile "`t Download Status: FAILED With Error -- $Error"
 						$Error.Clear()
 						Add-content $ReportFile "`r"
 					}	
@@ -237,7 +240,7 @@ if ($countCritical -gt 0 -Or $countOptional -gt 2) {
 					}
 					Catch {
 						[System.Exception]
-						Add-Content $ReportFile "`t Update Installation Status: FAILED With Error -- $Error()"
+						Add-Content $ReportFile "`t Update Installation Status: FAILED With Error -- $Error"
 						$Error.Clear()
 						Add-content $ReportFile "`r"
 					}	
@@ -265,11 +268,11 @@ if ($countCritical -gt 0 -Or $countOptional -gt 2) {
     Write-Host "`t There are now $($countOptional) optional updates available" -ForeGroundColor "Yellow"
     Write-Host "`t There are now $($countHidden) hidden updates available" -ForeGroundColor "Yellow"
 
-    & $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s "$env:computername"
+    & $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $SrvHost
 
 	exit $returnStateCritical
 }
@@ -295,12 +298,12 @@ if ($countHidden -gt 0) {
     Write-Host "`t There are $($countOptional) optional updates available" -ForeGroundColor "Yellow"
     Write-Host "`t There are $($countHidden) hidden updates available" -ForeGroundColor "Yellow"
 	
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s "$env:computername"
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s "$env:computername"
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $SrvHost
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $SrvHost
 	
 	exit $returnStateOK
 }
